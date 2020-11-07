@@ -1,10 +1,17 @@
 import argparse
 import random
 import sys
+import time
 import os
+from threading import Thread
+from prettytable import PrettyTable
 
-from utils.logs import Logger
-from utils.arrayFunctions import generateArray, sortArray
+import utils.globalVariables as globalVariables
+from utils.logs import print_log, banner
+from utils.arrayFunctions import generate_array, sort_array
+
+from modules.linearSearch import linear_search
+from modules.binarySearch import binary_search
 
 
 def clear():
@@ -18,37 +25,58 @@ def get_args(args=None):
     parser.add_argument('-s', '--size', help="Size of array", default=100000)
     parser.add_argument(
         '-m', '--max', help="Biggest possible number", default=500000)
-    parser.add_argument(
-        '-d', '--details', help="Toggle for showing the details", choices=(True, False), default=True)
 
     results = parser.parse_args(args)
 
     return (
         results.size,
-        results.max,
-        results.details
+        results.max
     )
 
 
+def run_searches(target, array):
+    t1 = Thread(target=linear_search, args=(target, array))
+    t2 = Thread(target=binary_search, args=(target, array))
+
+    print_log('primary', 'Starting searches')
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+    print_log('primary', 'Finished!')
+
+
+def show_results():
+    table = PrettyTable()
+    table.field_names = ['Algorithm', 'Time taken']
+
+    for operation, time_taken in globalVariables.performance_list:
+        algorithm = f"{operation}"
+        time_taken_ms = f"{time_taken/1000000}ms"
+        table.add_row([algorithm, time_taken_ms])
+
+    print(table.get_string())
+
+
 def main():
-    arrSize, maxNum, showDetails = get_args(sys.argv[1:])
-    clear()
+    arr_size, max_num = get_args(sys.argv[1:])
 
-    logger.printLog('info', 'Generating array')
-    arr = generateArray(int(arrSize), int(maxNum))
+    generated_array = generate_array(int(arr_size), int(max_num))
+    sorted_array = sort_array(generated_array)
 
-    logger.printLog('info', 'Sorting array...')
-    sortedArr = sortArray(arr)
-    # clear()
+    selected_index = random.randint(0, int(arr_size))
+    selected_item = sorted_array[selected_index]
+    print_log(
+        'normal', f'Array size: {len(generated_array)}\nSelected Index: {selected_index}; Item at the position: {selected_item}')
 
-    logger.printLog('success', 'Array sorted!')
-    selectedIndex = random.randint(0, arrSize)
-    logger.printLog('normal', f'Array size: {len(arr)}')
-    logger.printLog(
-        'normal', f'Selected Index: {selectedIndex}; Item at the position: {sortedArr[selectedIndex]}')
+    run_searches(selected_item, sorted_array)
+
+    show_results()
 
 
 if __name__ == '__main__':
-    logger = Logger()
-    logger.banner()
+    clear()
+    globalVariables.init()
+    banner()
     main()

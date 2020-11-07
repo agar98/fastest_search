@@ -1,16 +1,32 @@
 import random
+from utils.logs import print_log
+from utils.performanceCalculator import performance
 
 
-def generateArray(size, maxNumber):
-    arr = random.sample(range(1, maxNumber), size)
+@performance
+def generate_array(size, max_number):
+    print_log('info', 'Generating array')
+
+    arr = random.sample(range(1, max_number), size)
     return arr
 
 
-def sortArray(array):
+def quick_sort(array):
     if array == []:
         return []
     else:
         pivot = array[0]
-        lesser = sortArray([x for x in array[1:] if x < pivot])
-        greater = sortArray([x for x in array[1:] if x >= pivot])
+        lesser = quick_sort([x for x in array[1:] if x < pivot])
+        greater = quick_sort([x for x in array[1:] if x >= pivot])
         return lesser + [pivot] + greater
+
+
+@performance
+def sort_array(array):
+    print_log('info', 'Sorting array...')
+
+    arr = quick_sort(array)
+
+    print_log('success', 'Array sorted!')
+
+    return arr
