@@ -2,6 +2,10 @@
 
 This program runs a variety of search algorithms on the same data set & finds out which is the fastest.
 
+## Output
+
+![Output image](output.jpg?raw=true "Output")
+
 ## Needed dependencies
 
 This program needs the following python pacakges
