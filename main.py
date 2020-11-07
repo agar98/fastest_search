@@ -118,6 +118,11 @@ def show_results():
 def main():
     arr_size, max_num = get_args(sys.argv[1:])
 
+    if(int(arr_size) > int(max_num)):
+        print_log(
+            'error', 'Size of the array cannot be bigger than the range of numbers')
+        sys.exit(1)
+
     generated_array = generate_array(int(arr_size), int(max_num))
     sorted_array = sort_array(generated_array)
 
