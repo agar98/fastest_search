@@ -19,8 +19,11 @@ def binary_search_algorithm(array, l, r, target):
 
 @performance
 def binary_search(target, array):
-    print_log('info', '\nStarting Binary Search')
+    # print_log('info', '\nStarting Binary Search')
 
     index = binary_search_algorithm(array, 0, len(array) - 1, target)
 
-    print_log('success', f'Found at {index}!')
+    if(index != -1):
+        print_log('success', f'Binary Search found the target at {index}')
+    else:
+        print_log('error', 'Binary Search couldn\'t find target')

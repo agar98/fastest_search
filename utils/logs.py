@@ -8,7 +8,7 @@ white = '\033[0m'
 
 
 def banner():
-    print(f'{green}Welcome!!!{white}\nWe are going to run several search algorithms and find out which is the fastest!')
+    print(f'{purple}Welcome!!!{white}\nWe are going to run several search algorithms and find out which is the fastest!\n')
 
 
 def print_log(type, message):
